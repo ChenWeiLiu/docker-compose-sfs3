@@ -1,0 +1,30 @@
+version: "3.5"
+
+services:
+  sfs3-nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "sfs3-nginx"
+    links:
+      - sfs3-mysql
+    ports:
+      - 8000:80
+#    command: ["chmod", "644", "/var/www/app/include/config.php"]
+    volumes:
+      - ./sfs3/data:/var/www/app/data
+
+
+  sfs3-mysql:
+    image: vsamov/mysql-5.1.73
+    container_name: "sfs3_sql"
+    ports:
+      - 3306:3306
+    env_file:
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    volumes:
+      - ./mysql/conf:/etc/mysql/conf.d
+      - ./mysql/logs:/logs
+      - ./mysql/data:/var/lib/mysql
+      - ./backup:/backup
